@@ -1,12 +1,11 @@
 package technicalblog.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import technicalblog.model.Post;
 import org.springframework.stereotype.Service;
+import technicalblog.repository.PostRepository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,42 +14,43 @@ import java.util.List;
 @Service
 public class PostService {
 
-@PersistenceUnit(unitName = "techblog")
-
-private EntityManagerFactory emf;
+    @Autowired
+    private PostRepository repository;
 
     public PostService() {
 
         System.out.println("*** PostService ***");
     }
 
-    public void createPost (Post newPost){
+    public void createPost (Post newPost) {
+        newPost.setDate(new Date());
+        repository.createPost(newPost);
+        System.out.println("New Post: "+newPost);
     }
 
     public List <Post> getAllPosts () {
 
-        EntityManager em = emf.createEntityManager();
-
-        TypedQuery<Post> query = em.createQuery("SELECT p from Post p", Post.class);
-        List<Post> resultList;
-
-        resultList = query.getResultList();
-
-        return resultList;
+        return repository.getAllPosts();
 
     }
 
-    public List<Post> getOnePost() {
+    public Post getOnePost() {
 
-        EntityManager em = emf.createEntityManager();
+        return repository.getLatestPost();
 
-        TypedQuery<Post> query = em.createQuery("SELECT p from Post p where p.id = 3", Post.class);
-        List<Post> resultList;
+    }
 
-        resultList = query.getResultList();
+    public Post getPost(Integer postId) {
+        return repository.getPost(postId);
+    }
 
-        return resultList;
+    public void updatePost(Post updatedPost) {
+        updatedPost.setDate(new Date());
+        repository.updatePost(updatedPost);
+    }
 
+    public void deletePost(Integer postId) {
+        repository.deletePost(postId);
     }
 
     public ArrayList <Post> getAllPostsJDBC () {
