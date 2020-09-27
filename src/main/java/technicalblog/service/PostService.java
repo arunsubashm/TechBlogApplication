@@ -44,7 +44,7 @@ private EntityManagerFactory emf;
 
         EntityManager em = emf.createEntityManager();
 
-        TypedQuery<Post> query = em.createQuery("SELECT p from Post p where p.id = 4", Post.class);
+        TypedQuery<Post> query = em.createQuery("SELECT p from Post p where p.id = 3", Post.class);
         List<Post> resultList;
 
         resultList = query.getResultList();
